@@ -91,31 +91,34 @@ These are the steps the Province of South-Holland takes to go from scratch to an
 
 1. Download the geojson file of the area of interest from the `pzh-blob-satelliet` blob storage in folder `satellite-images-nso/natura2000-geojson-gebieden/`. Place it locally in the \<local-geojson-folder\>.
    - Note that files starting with `natura2000` in this folder take precedence as they are more accurate
-2. Setup the [satellite_images_nso_extractor](https://github.com/Provincie-Zuid-Holland/satellite_images_nso_extractor) repository.
-3. Open `src/nso_notebook_example.ipynb` in satellite_images_nso_extractor and change the second cell as follows:
+2. Download the cloud_detection_model from the `pzh-blob-satelliet` blob storage in folder `satellite-images-nso/cloud_detection_models/`. Save it locally to \<local-cloud-detection-model-path\>.
+3. Setup the [satellite_images_nso_extractor](https://github.com/Provincie-Zuid-Holland/satellite_images_nso_extractor) repository.
+4. Create the `src/settings.py` file by copying and changing `src/settings_example.py` to
+5. Open `src/nso_notebook_example.ipynb` in satellite_images_nso_extractor and change the second cell as follows:
    - nso_username and nso_password to the correct credentials
    - path_geojson = \<local-geojson-folder\>/\<geojson-file-name\>
    - height_band_filepath = \<ahn-file-path\>
+   - cloud_detection_model_path = \<local-cloud-detection-model-path\>
    - output_path = \<local-satellite-images-folder\>
    - links_must_contain = ["SV", "50cm", "RGBI", "\<year-of-interest\>"]
-4. Run all the cells before "Normalize Landsat Image" in the notebook `src/nso_notebook_example.ipynb`.
-5. Upload the resulting <cropped_ndvi_height_tif_filepath> to `pzh-blob-satelliet` blob storage to folder `satellite-images-nso/50cm/\<area-of-interest\>`
-6. Setup the [satellite-images-nso-data-science](https://github.com/Provincie-Zuid-Holland/satellite-images-nso-datascience) repository.
-7. In `scalers_make_run/run_make_scalers_normalize.ipynb` change the second cell so that
+6. Open `src/nso_notebook_example.ipynb` in satellite_images_nso_extractor and run all the cells before "Normalize Landsat Image".
+7. Upload the resulting <cropped_ndvi_height_tif_filepath> to `pzh-blob-satelliet` blob storage to folder `satellite-images-nso/50cm/\<area-of-interest\>`
+8. Setup the [satellite-images-nso-data-science](https://github.com/Provincie-Zuid-Holland/satellite-images-nso-datascience) repository.
+9. In `scalers_make_run/run_make_scalers_normalize.ipynb` change the second cell so that
    - folder_path = \<local-satellite-images-folder\>
-8. Run `scalers_make_run/run_make_scalers_normalize.ipynb`. The resulting files will appear in `\<local-satellite-images-nso-data-science-folder\>/scalers`.
-9. Setup the [satellite_images_nso_tif_iterator](https://github.com/Provincie-Zuid-Holland/satellite_images_nso_tif_model_iterator) repository.
-   - Note that this requires executing `pip install .` in the [satellite-images-nso-data-science](https://github.com/Provincie-Zuid-Holland/satellite-images-nso-datascience) repository.
-10. Set up settings.py as instructed in the README, where:
+10. Run `scalers_make_run/run_make_scalers_normalize.ipynb`. The resulting files will appear in `\<local-satellite-images-nso-data-science-folder\>/scalers`.
+11. Setup the [satellite_images_nso_tif_iterator](https://github.com/Provincie-Zuid-Holland/satellite_images_nso_tif_model_iterator) repository.
+    - Note that this requires executing `pip install .` in the [satellite-images-nso-data-science](https://github.com/Provincie-Zuid-Holland/satellite-images-nso-datascience) repository.
+12. Set up settings.py as instructed in the README, where:
     - MODEL_PATH = \<filepath-to-existing-model.sav\>
     - TIF_FILE = \<local-satellite-images-filepath\>
     - OUTPUT_PATH = \<model-output-path\>
     - OUTPUT_FILENAME = \<output-filename.shp or .geojson\>
     - PATH_TO_SCALER = "\<local-satellite-images-nso-data-science-folder\>/scalers"
-11. Run `example_iterator.py`
+13. Run `example_iterator.py`
     - Note you might need to change the `parts` variable here, to optimize the speed of execution. This will determine the size of the chunk processed.
     - This will likely take quite some time. (in the order of hours)
-12. Your labelled polygons can now be found in '\<model-output-path\>/\<output-filename.shp or .geojson\>' and visualised using a GIS tool.
+14. Your labelled polygons can now be found in '\<model-output-path\>/\<output-filename.shp or .geojson\>' and visualised using a GIS tool.
 
 # Author
 
